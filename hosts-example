@@ -1,0 +1,9 @@
+trojan:
+  hosts:
+    YOUR-SERVER-IP:
+      external_domainname: YOUR DOMAINNAME
+      trojan_password: "YOUR PASSWORD"
+      certbot_admin_email: YOUR EMAIL
+      certbot_certs:
+        - domains:
+          - YOUR DOMAINNAME

@@ -1,0 +1,10 @@
+[Unit]
+Description=Trojan server
+
+[Service]
+Type=exec
+ExecStart=/opt/trojan/trojan -c /opt/trojan/server.json -l /var/log/trojan.log
+ExecReload=/bin/kill -HUP $MAINPID
+
+[Install]
+WantedBy=multi-user.target

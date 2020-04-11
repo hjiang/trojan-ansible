@@ -1,0 +1,48 @@
+---
+
+- hosts: trojan
+  vars:
+    certbot_install_from_source: true
+    certbot_keep_updated: true
+    certbot_create_standalone_stop_services:
+      - nginx
+    certbot_create_if_missing: true
+    certbot_create_method: standalone
+  roles:
+    - geerlingguy.certbot
+  pre_tasks:
+    - name: Install git
+      apt:
+        name: git
+        state: present
+    - name: Install nginx httpd
+      apt:
+        name: nginx
+        state: present
+  tasks:
+    - name: Download trojan
+      get_url:
+        url: https://github.com/trojan-gfw/trojan/releases/download/v1.15.1/trojan-1.15.1-linux-amd64.tar.xz
+        dest: /tmp/trojan.tar.xz
+    - name: Unarchive trojan
+      unarchive:
+        src: /tmp/trojan.tar.xz
+        dest: /opt
+        remote_src: yes
+    - name: Setup cert auto-renew
+      copy:
+        src: ./certbot-renew
+        dest: /etc/cron.daily/
+    - name: Copy trojan config
+      template:
+        src: ./server.json.j2
+        dest: /opt/trojan/server.json
+    - name: Copy systemd unit file
+      copy:
+        src: ./trojan.service
+        dest: /etc/systemd/system/
+    - name: Start and enable the service
+      service:
+        name: trojan
+        enabled: true
+        state: started

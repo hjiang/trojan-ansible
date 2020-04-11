@@ -1,0 +1,23 @@
+---
+
+- hosts: trojan
+  tasks:
+    - name: Copy trojan config
+      template:
+        src: ./server.json.j2
+        dest: /opt/trojan/server.json
+      register: res_trojan_config
+    - name: Copy systemd unit file
+      copy:
+        src: ./trojan.service
+        dest: /etc/systemd/system/
+      register: res_trojan_service_config
+    - name: Reload systemd
+      command: systemctl daemon-reload
+      when: res_trojan_service_config.changed
+    - name: Reload the service
+      service:
+        name: trojan
+        enabled: true
+        state: reloaded
+      when: res_trojan_config.changed or res_trojan_service_config.changed
