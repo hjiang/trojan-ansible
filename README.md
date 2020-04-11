@@ -28,7 +28,7 @@ The playbooks are only tested under the following conditions:
 
 ### Initial setup
 
-Install recent versions of Python3, and then install Ansible:
+Install a recent version of Python 3, and then install Ansible:
 
 ```
 pip install ansible
