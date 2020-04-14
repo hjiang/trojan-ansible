@@ -1,6 +1,7 @@
 ---
 
 - hosts: trojan
+  become: true
   vars:
     certbot_install_from_source: true
     certbot_keep_updated: true
